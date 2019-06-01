@@ -28,14 +28,10 @@ public class ChestListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void walkEvent(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        Location loc = p.getLocation();
-        double i = loc.distance(p.getLocation());
-        int x = 0;
-        boolean hasItems;
         Sign signB = null;
+        int amount = 0;
         //TODO add only check every ~20s
         for(Block b : getNearestChests(p.getLocation(), 2)) {
-            hasItems = false; //Reset
             //b.getState().getBlock().getState();
             TileState chest = (TileState)b.getState().getBlock().getState();
             Inventory inventory = ((Chest) chest).getBlockInventory();
@@ -49,18 +45,11 @@ public class ChestListener implements Listener {
 
             for (ItemStack item : inventory.getContents().clone()) {
                 if(item == null) continue; //Will also check for AIR
-                hasItems = true;
+                amount += item.getAmount();
             }
 
             if(signB != null) {
-                if(hasItems) {
-                    //p.sendMessage("Nearest chest has items");
-                    signB.setLine(0, "+");
-                } else {
-                    //p.sendMessage("Nearest chest has got no items");
-                    signB.setLine(0, "-");
-                }
-
+                signB.setLine(1, String.valueOf(amount));
                 signB.update(true);
             }
         }
