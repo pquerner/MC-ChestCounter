@@ -30,26 +30,35 @@ public class ChestListener implements Listener {
         Player p = e.getPlayer();
         Sign signB = null;
         int amount = 0;
+        int amountMax = 0;
+        boolean addedMaxAmount;
         //TODO add only check every ~20s
+        //TODO also check the next -20 y-axis block beneath this chest
         for(Block b : getNearestChests(p.getLocation(), 2)) {
             //b.getState().getBlock().getState();
             TileState chest = (TileState)b.getState().getBlock().getState();
             Inventory inventory = ((Chest) chest).getBlockInventory();
 
-            //Sign must be above chest in y+1
-            Location signL = b.getLocation().add(0,1,0);
+            //Sign must be before chest at z+1
+            Location signL = b.getLocation().add(0,0,1);
 
-            if(signL != null && signL.getBlock().getType().toString().contains("WALL_SIGN")) {
+            if(signL != null && signL.getBlock().getType().equals(Material.DARK_OAK_WALL_SIGN)) {
                 signB = (Sign) signL.getBlock().getState();
             }
 
+            addedMaxAmount = false;
             for (ItemStack item : inventory.getContents().clone()) {
                 if(item == null) continue; //Will also check for AIR
                 amount += item.getAmount();
+                if(inventory.getSize() > 0 && !addedMaxAmount) { //Only calc Y once
+                    amountMax += inventory.getSize() * item.getMaxStackSize();
+                }
+                addedMaxAmount = true;
             }
 
+
             if(signB != null) {
-                signB.setLine(1, String.valueOf(amount));
+                signB.setLine(1, String.valueOf(amount) + " / " + String.valueOf(amountMax));
                 signB.update(true);
             }
         }
