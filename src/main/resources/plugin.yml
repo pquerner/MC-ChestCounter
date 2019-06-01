@@ -1,0 +1,4 @@
+name: ChestCounter
+main: de.paskl.chestcounter.ChestCounter
+version: 1.0
+api-version: 1.14
