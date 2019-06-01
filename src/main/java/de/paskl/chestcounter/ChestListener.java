@@ -29,12 +29,15 @@ public class ChestListener implements Listener {
     public void walkEvent(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         Sign signB = null;
-        int amount = 0;
-        int amountMax = 0;
+        int amount;
+        int amountMax;
         boolean addedMaxAmount;
         //TODO add only check every ~20s
         //TODO also check the next -20 y-axis block beneath this chest
-        for(Block b : getNearestChests(p.getLocation(), 2)) {
+        for(Block b : getNearestChests(p.getLocation(), 5)) {
+            amountMax = 0;
+            amount = 0;
+
             //b.getState().getBlock().getState();
             TileState chest = (TileState)b.getState().getBlock().getState();
             Inventory inventory = ((Chest) chest).getBlockInventory();
