@@ -114,8 +114,8 @@ public class ChestListener implements Listener {
     private List<Block> getBlocks(Block start, int howManyBlocksDown) {
         List<Block> blocks = new ArrayList<Block>();
 
-        int i = start.getY() + howManyBlocksDown;
-        while (i > 0) {
+        int i = start.getY() - howManyBlocksDown;
+        while (i <= start.getY()) {
             Block b = start.getWorld().getBlockAt(start.getX(), i, start.getZ());
             if (b.getType().toString().endsWith("_WALL_SIGN") &&
                     !(b.getType() == Material.BIRCH_WALL_SIGN)) {
@@ -124,7 +124,7 @@ public class ChestListener implements Listener {
                     blocks.add(b);
                 }
             }
-            i--;
+            i++;
         }
 
         return blocks;
