@@ -1,5 +1,6 @@
 package de.paskl.chestcounter;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -82,7 +83,8 @@ public class CommandUpdate implements CommandExecutor {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = plugin.getServer().getWorld("World").getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                if (chestListener.chestsMaterialList.contains(b.getType())) {
+                if (b.getType().toString().endsWith("_WALL_SIGN") &&
+                        !(b.getType() == Material.BIRCH_WALL_SIGN)) {
                     try {
                         Sign sign = (Sign) b.getState();
                         chestListener.updateChildrenSign(b, sign);
