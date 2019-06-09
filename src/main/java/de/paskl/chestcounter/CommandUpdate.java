@@ -68,6 +68,7 @@ public class CommandUpdate implements CommandExecutor {
         } catch (NullPointerException ignored) {
         }
 
+        this.plugin.saveConfig();
         return true;
     }
 
@@ -113,7 +114,7 @@ public class CommandUpdate implements CommandExecutor {
             }
         } catch (NullPointerException ignored) {
         }
-
+        this.plugin.saveConfig();
         return true;
     }
 }
