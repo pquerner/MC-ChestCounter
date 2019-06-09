@@ -80,15 +80,17 @@ public class CommandUpdate implements CommandExecutor {
         //Update all childs first
         try {
             Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("wallsigns").getValues(true);
-            int x = 0;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = plugin.getServer().getWorld("World").getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                try {
-                    Sign sign = (Sign) b.getState();
-                    chestListener.updateChildrenSign(b, sign);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (chestListener.chestsMaterialList.contains(b.getType())) {
+                    try {
+                        Sign sign = (Sign) b.getState();
+                        chestListener.updateChildrenSign(b, sign);
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Could not update block at, is it of type sign? " + entry.getValue());
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (NullPointerException ignored) {
@@ -102,10 +104,14 @@ public class CommandUpdate implements CommandExecutor {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = plugin.getServer().getWorld("World").getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                try {
-                    Sign sign = (Sign) b.getState();
-                    chestListener.updateMainSign(b, sign);
-                } catch (Exception ignored) {
+                if (ChestListener.COUNT_CHILDREN_SIGN_MATERIAL == b.getType()) {
+                    try {
+                        Sign sign = (Sign) b.getState();
+                        chestListener.updateMainSign(b, sign);
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Could not update block at, is it of type sign? " + entry.getValue());
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (NullPointerException ignored) {

@@ -22,7 +22,7 @@ public class ChestListener implements Listener {
     public static final Material COUNT_CHILDREN_SIGN_MATERIAL = Material.BIRCH_WALL_SIGN;
     private static Player player = null;
     //Look at normal and trapped chests (also works on Doublechests or either)
-    List<Material> chestsMaterialList = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.TRAPPED_CHEST));
+    public List<Material> chestsMaterialList = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.TRAPPED_CHEST));
     private ChestCounter plugin;
 
     public ChestListener(ChestCounter p) {
