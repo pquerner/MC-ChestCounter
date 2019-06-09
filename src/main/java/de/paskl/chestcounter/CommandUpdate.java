@@ -36,7 +36,6 @@ public class CommandUpdate implements CommandExecutor {
         //Update all childs first
         try {
             Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("wallsigns").getValues(true);
-            int x = 0;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = player.getWorld().getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
@@ -55,7 +54,6 @@ public class CommandUpdate implements CommandExecutor {
         //Then update all main signs
         try {
             Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("mainsigns").getValues(true);
-            int x = 0;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = player.getWorld().getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
@@ -100,7 +98,6 @@ public class CommandUpdate implements CommandExecutor {
         //Then update all main signs
         try {
             Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("mainsigns").getValues(true);
-            int x = 0;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String[] exploded = entry.getValue().toString().split(";");
                 Block b = plugin.getServer().getWorld("World").getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
