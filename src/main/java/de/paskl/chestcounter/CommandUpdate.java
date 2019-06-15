@@ -26,53 +26,8 @@ public class CommandUpdate implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
-            return updateSigns(((Player) sender).getPlayer());
+            return updateSigns();
         }
-        return true;
-    }
-
-    public boolean updateSigns(Player player) {
-
-        this.plugin.reloadConfig();
-
-        //Update all childs first
-        try {
-            Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("wallsigns").getValues(true);
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String[] exploded = entry.getValue().toString().split(";");
-                Block b = player.getWorld().getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                try {
-                    Sign sign = (Sign) b.getState();
-                    chestListener.setPlayer(player);
-                    chestListener.updateChildrenSign(b, sign);
-                } catch (Exception e) {
-                    plugin.getLogger().warning("Could not update block at " + player.getWorld().getName() + "(" + entry.getValue() + ")");
-                    e.printStackTrace();
-                }
-            }
-        } catch (NullPointerException ignored) {
-        }
-
-
-        //Then update all main signs
-        try {
-            Map<String, Object> map = this.plugin.getConfig().getConfigurationSection("mainsigns").getValues(true);
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String[] exploded = entry.getValue().toString().split(";");
-                Block b = player.getWorld().getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                try {
-                    Sign sign = (Sign) b.getState();
-                    chestListener.setPlayer(player);
-                    chestListener.updateMainSign(b, sign);
-                } catch (Exception e) {
-                    plugin.getLogger().warning("Could not update block at " + player.getWorld().getName() + "(" + entry.getValue() + ")");
-                    e.printStackTrace();
-                }
-            }
-        } catch (NullPointerException ignored) {
-        }
-
-        this.plugin.saveConfig();
         return true;
     }
 
