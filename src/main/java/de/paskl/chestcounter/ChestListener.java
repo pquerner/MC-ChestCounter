@@ -21,6 +21,8 @@ public class ChestListener implements Listener {
     public static final String COUNTER_LINE = "[Counter]";
     public static final int BLOCK_LOOKUP_DOWN = 3;
     public static final Material COUNT_CHILDREN_SIGN_MATERIAL = Material.BIRCH_WALL_SIGN;
+    public static final String MAINSIGNS_STRING_CONFIG = "mainsigns.";
+    public static final String WALLSIGNS_STRING_CONFIG = "wallsigns.";
     private static Player player = null;
     //Look at normal and trapped chests (also works on Doublechests or either)
     public List<Material> chestsMaterialList = new ArrayList<Material>(Arrays.asList(Material.CHEST, Material.TRAPPED_CHEST));
@@ -62,12 +64,25 @@ public class ChestListener implements Listener {
             if (s.getLine(0).equals(COUNTER_LINE)) {
                 this.plugin.reloadConfig();
                 String keyVal = s.getLocation().getBlockX() + ";" + s.getLocation().getBlockY() + ";" + s.getLocation().getBlockZ();
-                String signType = (s.getType() == COUNT_CHILDREN_SIGN_MATERIAL ? "mainsigns" : "wallsigns") + ".";
+                String signType = s.getType() == COUNT_CHILDREN_SIGN_MATERIAL ? MAINSIGNS_STRING_CONFIG : WALLSIGNS_STRING_CONFIG;
                 this.plugin.getConfig().set(signType + keyVal, null);
                 this.plugin.saveConfig();
             }
         } else {
-            //TODO check if wall-sign was (is?) attached to this block and follows rules
+            //Hit any other block; check if wall sign is attached to it (from any side) and check if its a counter-wall-sign.
+            for (BlockFace face : BlockFace.values()) {
+                Block b = e.getBlock().getRelative(face);
+                if (b.getType().toString().endsWith("_WALL_SIGN")) {
+                    Sign s = (Sign) b.getState();
+                    if (s.getLine(0).equals(COUNTER_LINE)) {
+                        this.plugin.reloadConfig();
+                        String keyVal = s.getLocation().getBlockX() + ";" + s.getLocation().getBlockY() + ";" + s.getLocation().getBlockZ();
+                        String signType = s.getType() == COUNT_CHILDREN_SIGN_MATERIAL ? MAINSIGNS_STRING_CONFIG : WALLSIGNS_STRING_CONFIG;
+                        this.plugin.getConfig().set(signType + keyVal, null);
+                        this.plugin.saveConfig();
+                    }
+                }
+            }
         }
     }
 
@@ -101,7 +116,7 @@ public class ChestListener implements Listener {
             sign.setLine(1, String.valueOf(currentTotalAmount) + " / " + String.valueOf(maxTotalAmount));
             sign.update(true);
             String keyVal = sign.getLocation().getBlockX() + ";" + sign.getLocation().getBlockY() + ";" + sign.getLocation().getBlockZ();
-            this.plugin.getConfig().set("mainsigns." + keyVal, keyVal);
+            this.plugin.getConfig().set(MAINSIGNS_STRING_CONFIG + keyVal, keyVal);
         }
     }
 
@@ -142,7 +157,7 @@ public class ChestListener implements Listener {
                 sign.update(true);
 
                 String keyVal = sign.getLocation().getBlockX() + ";" + sign.getLocation().getBlockY() + ";" + sign.getLocation().getBlockZ();
-                this.plugin.getConfig().set("wallsigns." + keyVal, keyVal);
+                this.plugin.getConfig().set(WALLSIGNS_STRING_CONFIG + keyVal, keyVal);
             } else {
                 assert getPlayer() != null;
                 getPlayer().sendMessage(ChatColor.RED + "Sign must be attached to a chest!");
