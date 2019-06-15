@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
@@ -50,6 +51,23 @@ public class ChestListener implements Listener {
             updateChildrenSign(block, sign);
         } else { //Is "count children sign"
             updateMainSign(block, sign);
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        if (e.getBlock().getType().toString().endsWith("_WALL_SIGN")) {
+            //Directly hit wall sign
+            Sign s = (Sign) e.getBlock().getState();
+            if (s.getLine(0).equals(COUNTER_LINE)) {
+                this.plugin.reloadConfig();
+                String keyVal = s.getLocation().getBlockX() + ";" + s.getLocation().getBlockY() + ";" + s.getLocation().getBlockZ();
+                String signType = (s.getType() == COUNT_CHILDREN_SIGN_MATERIAL ? "mainsigns" : "wallsigns") + ".";
+                this.plugin.getConfig().set(signType + keyVal, null);
+                this.plugin.saveConfig();
+            }
+        } else {
+            //TODO check if wall-sign was (is?) attached to this block and follows rules
         }
     }
 
