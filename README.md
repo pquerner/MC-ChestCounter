@@ -3,4 +3,4 @@
 ## What does it do?
 
 ## TODO
-- Update all signs near you at once
+- Remove sign from config.yml if not exists (ie player destroy, block destroy otherwise, idk. think of something!)
