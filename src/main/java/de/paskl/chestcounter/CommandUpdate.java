@@ -43,13 +43,13 @@ public class CommandUpdate implements CommandExecutor {
                 for (World w : plugin.getServer().getWorlds()) {
                     try {
                         Block b = w.getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                        if (b.getType().toString().endsWith("_WALL_SIGN") &&
-                                !(b.getType() == Material.BIRCH_WALL_SIGN)) {
+                        if (b != null) { //Maybe no block exists at these coords in this world, so ignore it
+                            if (b.getType().toString().endsWith("_WALL_SIGN") &&
+                                    !(b.getType() == Material.BIRCH_WALL_SIGN)) {
 
-                            Sign sign = (Sign) b.getState();
-                            chestListener.updateChildrenSign(b, sign);
-                        } else {
-                            plugin.getLogger().warning("Could not update block at " + w.getName() + "(" + entry.getValue() + ")");
+                                Sign sign = (Sign) b.getState();
+                                chestListener.updateChildrenSign(b, sign);
+                            }
                         }
                     } catch (Exception e) {
                         plugin.getLogger().warning("Could not update block at " + w.getName() + "(" + entry.getValue() + ")");
@@ -69,11 +69,11 @@ public class CommandUpdate implements CommandExecutor {
                 for (World w : plugin.getServer().getWorlds()) {
                     try {
                         Block b = w.getBlockAt(Integer.valueOf(exploded[0]), Integer.valueOf(exploded[1]), Integer.valueOf(exploded[2]));
-                        if (ChestListener.COUNT_CHILDREN_SIGN_MATERIAL == b.getType()) {
-                            Sign sign = (Sign) b.getState();
-                            chestListener.updateMainSign(b, sign);
-                        } else {
-                            plugin.getLogger().warning("Could not update block at " + w.getName() + "(" + entry.getValue() + ")");
+                        if (b != null) { //Maybe no block exists at these coords in this world, so ignore it
+                            if (ChestListener.COUNT_CHILDREN_SIGN_MATERIAL == b.getType()) {
+                                Sign sign = (Sign) b.getState();
+                                chestListener.updateMainSign(b, sign);
+                            }
                         }
                     } catch (Exception e) {
                         plugin.getLogger().warning("Could not update block at " + w.getName() + "(" + entry.getValue() + ")");
